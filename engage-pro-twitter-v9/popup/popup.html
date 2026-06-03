@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>engage-pro</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="logo">
+        <img src="../assets/logo-light.png" alt="engage-pro" width="24" height="24">
+        <span>engage-pro</span>
+      </div>
+      <div class="status-indicator" id="statusIndicator">
+        <span class="status-dot"></span>
+        <span class="status-text">Ready</span>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="platform-tabs">
+        <button class="tab active" data-platform="linkedin">LinkedIn</button>
+        <button class="tab" data-platform="twitter">Twitter/X</button>
+      </div>
+
+      <div class="controls">
+        <div class="mode-selector">
+          <label>Speed Mode</label>
+          <select id="speedMode">
+            <option value="slow">Slow & Safe</option>
+            <option value="medium" selected>Medium</option>
+            <option value="fast">Fast</option>
+          </select>
+        </div>
+
+        <div class="toggle-group">
+          <label class="toggle-item">
+            <input type="checkbox" id="autoLike" checked>
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">Auto Like</span>
+          </label>
+          <label class="toggle-item">
+            <input type="checkbox" id="autoReply" checked>
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">AI Replies ✨</span>
+          </label>
+          <label class="toggle-item">
+            <input type="checkbox" id="autoFollow">
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">Auto Follow</span>
+          </label>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <span class="stat-value" id="likesCount">0</span>
+            <span class="stat-label">Likes</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="repliesCount">0</span>
+            <span class="stat-label">Replies</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="followsCount">0</span>
+            <span class="stat-label">Follows</span>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <button id="startBtn" class="btn btn-primary">Start</button>
+      <button id="stopBtn" class="btn btn-secondary hidden">Stop</button>
+      <button id="settingsBtn" class="btn btn-ghost">Settings</button>
+    </footer>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

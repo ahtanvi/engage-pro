@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>engage-pro - Dashboard</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+  <div class="app">
+    <header class="sidebar-header">
+      <div class="brand">
+        <div class="brand-icon">EP</div>
+        <div class="brand-text">
+          <div class="brand-title">engage-pro</div>
+          <div class="brand-version">v1.0.0</div>
+        </div>
+      </div>
+      <button class="btn-icon" id="closeBtn" title="Close">×</button>
+    </header>
+
+    <nav class="nav-tabs">
+      <button class="nav-tab active" data-tab="dashboard">
+        <span class="nav-tab-icon">⚡</span>
+        <span class="nav-tab-label">Dashboard</span>
+      </button>
+      <button class="nav-tab" data-tab="queue">
+        <span class="nav-tab-icon">○</span>
+        <span class="nav-tab-label">Queue</span>
+      </button>
+      <button class="nav-tab" data-tab="history">
+        <span class="nav-tab-icon">■</span>
+        <span class="nav-tab-label">History</span>
+      </button>
+      <button class="nav-tab" data-tab="settings">
+        <span class="nav-tab-icon">◯</span>
+        <span class="nav-tab-label">Settings</span>
+      </button>
+    </nav>
+
+    <main class="main-content">
+      <!-- Dashboard Tab -->
+      <section id="dashboardTab" class="tab-content active">
+        <div class="master-control" id="masterControl">
+          <div class="master-control-head">
+            <div>
+              <div class="master-control-label">Engagement Engine</div>
+              <div class="master-control-title">Auto-Pilot Mode</div>
+            </div>
+            <button class="master-toggle" id="masterToggle"></button>
+          </div>
+          <div class="master-control-status">
+            <span class="status-dot" id="statusDot"></span>
+            <span class="master-control-status-text" id="statusText">Idle</span>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value accent" id="totalLikes">0</div>
+            <div class="stat-label">Total Likes</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value accent" id="totalReplies">0</div>
+            <div class="stat-label">AI Replies</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value accent" id="totalFollows">0</div>
+            <div class="stat-label">New Follows</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="sessionTime">00:00</div>
+            <div class="stat-label">Session Time</div>
+          </div>
+        </div>
+
+        <div class="pipeline-wrap">
+          <div class="pipeline-step">
+            <div class="pipeline-step-icon" id="stepScan">○</div>
+            <div class="pipeline-step-label">Scan</div>
+          </div>
+          <div class="pipeline-step">
+            <div class="pipeline-step-icon" id="stepAnalyze">○</div>
+            <div class="pipeline-step-label">Analyze</div>
+          </div>
+          <div class="pipeline-step">
+            <div class="pipeline-step-icon" id="stepEngage">○</div>
+            <div class="pipeline-step-label">Engage</div>
+          </div>
+          <div class="pipeline-step">
+            <div class="pipeline-step-icon" id="stepVerify">○</div>
+            <div class="pipeline-step-label">Verify</div>
+          </div>
+        </div>
+
+        <div class="current-task hidden" id="currentTask">
+          <div class="current-task-label">Current Task</div>
+          <div class="current-task-text" id="currentTaskText">Scanning feed for engagement targets...</div>
+        </div>
+      </section>
+
+      <!-- Queue Tab -->
+      <section id="queueTab" class="tab-content">
+        <div class="section-header">
+          <span>Engagement Queue</span>
+          <span class="pill pill-neutral" id="queueCount">0 items</span>
+        </div>
+        <div class="queue-list" id="queueList">
+          <div class="empty-state">
+            <div class="empty-state-icon">○</div>
+            <div class="empty-state-title">Queue is empty</div>
+            <div class="empty-state-desc">Start the engine to begin scanning for engagement targets.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- History Tab -->
+      <section id="historyTab" class="tab-content">
+        <div class="section-header">
+          <span>Activity History</span>
+          <button class="btn-xs btn-ghost" id="clearHistory">Clear</button>
+        </div>
+        <div class="activity-list" id="activityList">
+          <div class="empty-state">
+            <div class="empty-state-icon">■</div>
+            <div class="empty-state-title">No activity yet</div>
+            <div class="empty-state-desc">Your engagement history will appear here.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Settings Tab -->
+      <section id="settingsTab" class="tab-content">
+        <div class="section-header">
+          <span>Configuration</span>
+        </div>
+
+        <div class="settings-group">
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">LinkedIn Auto-Like</div>
+              <div class="setting-desc">Automatically like posts in your feed</div>
+            </div>
+            <label class="toggle-sm">
+              <input type="checkbox" id="settingLinkedInLike" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">LinkedIn AI Replies</div>
+              <div class="setting-desc">Generate contextual replies using AI</div>
+            </div>
+            <label class="toggle-sm">
+              <input type="checkbox" id="settingLinkedInReply" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">Twitter/X Auto-Like</div>
+              <div class="setting-desc">Automatically like tweets in your feed</div>
+            </div>
+            <label class="toggle-sm">
+              <input type="checkbox" id="settingTwitterLike" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">Twitter/X AI Replies</div>
+              <div class="setting-desc">Generate contextual replies using AI</div>
+            </div>
+            <label class="toggle-sm">
+              <input type="checkbox" id="settingTwitterReply" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">Daily Limit</div>
+              <div class="setting-desc">Maximum engagements per day</div>
+            </div>
+            <input type="number" class="setting-input" id="dailyLimit" value="50" min="10" max="500">
+          </div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">Engagement Delay</div>
+              <div class="setting-desc">Minimum seconds between actions</div>
+            </div>
+            <input type="number" class="setting-input" id="engagementDelay" value="30" min="5" max="300">
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <button class="btn btn-full btn-primary" id="saveSettings">Save Settings</button>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="sidepanel.js"></script>
+</body>
+</html>

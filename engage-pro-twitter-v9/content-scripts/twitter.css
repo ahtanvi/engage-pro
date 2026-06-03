@@ -1,0 +1,55 @@
+/* Twitter/X content script styles */
+
+/* Hide engagement markers from users */
+[data-engaged="true"] {
+  /* No visual changes - purely for tracking */
+}
+
+/* Subtle highlight for currently processing */
+[data-processing="true"] {
+  outline: 1px solid rgba(163, 230, 53, 0.1);
+  outline-offset: 4px;
+}
+
+/* Cursor indicator for visual feedback */
+.engage-pro-cursor {
+  position: fixed;
+  width: 14px;
+  height: 14px;
+  background: #a3e635;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2147483647;
+  box-shadow: 0 0 10px rgba(163, 230, 53, 0.5), 0 0 20px rgba(163, 230, 53, 0.2);
+  transition: transform 0.1s ease;
+  display: none;
+}
+
+.engage-pro-cursor.active {
+  display: block;
+}
+
+/* Status label */
+.engage-pro-label {
+  position: fixed;
+  left: 16px;
+  top: 18px;
+  background: #111;
+  color: #a3e635;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 12px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 2147483647;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.engage-pro-label.show {
+  opacity: 1;
+  transform: scale(1);
+}
