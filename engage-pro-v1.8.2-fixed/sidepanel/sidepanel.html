@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>engage-pro - Dashboard</title>
+  <link rel="stylesheet" href="sidepanel.css">
+  <style>.btn-xs { padding: 0.25rem 0.5rem; font-size: 0.75rem; border-radius: 4px; border: 1px solid #475569; background: transparent; color: #94a3b8; cursor: pointer; } .btn-xs:hover { background: #334155; color: #e2e8f0; } .btn-xs:disabled { opacity: 0.5; cursor: not-allowed; }</style>
+</head>
+<body>
+  <div class="app">
+    <header class="sidebar-header">
+      <div class="brand">
+        <div class="brand-icon">EP</div>
+        <div class="brand-text">
+          <div class="brand-title">engage-pro</div>
+          <div class="brand-version">v1.8.2</div>
+        </div>
+      </div>
+      <button class="btn-icon" id="closeBtn" title="Close">×</button>
+    </header>
+
+    <nav class="nav-tabs">
+      <button class="nav-tab active" data-tab="dashboard">
+        <span class="nav-tab-icon">⚡</span>
+        <span class="nav-tab-label">Dashboard</span>
+      </button>
+      <button class="nav-tab" data-tab="queue">
+        <span class="nav-tab-icon">○</span>
+        <span class="nav-tab-label">Queue</span>
+      </button>
+      <button class="nav-tab" data-tab="history">
+        <span class="nav-tab-icon">■</span>
+        <span class="nav-tab-label">History</span>
+      </button>
+      <button class="nav-tab" data-tab="ai">
+        <span class="nav-tab-icon">✦</span>
+        <span class="nav-tab-label">AI</span>
+      </button>
+      <button class="nav-tab" data-tab="advanced">
+        <span class="nav-tab-icon">⚙</span>
+        <span class="nav-tab-label">Advanced</span>
+      </button>
+      <button class="nav-tab" data-tab="settings">
+        <span class="nav-tab-icon">◯</span>
+        <span class="nav-tab-label">Settings</span>
+      </button>
+    </nav>
+
+    <main class="main-content">
+      <!-- Dashboard Tab -->
+      <section id="dashboardTab" class="tab-content active">
+        <div class="master-control" id="masterControl">
+          <div class="master-control-head">
+            <div>
+              <div class="master-control-label">Engagement Engine</div>
+              <div class="master-control-title">Auto-Pilot Mode</div>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+              <button class="master-toggle" id="masterToggle"></button>
+              <button class="btn-icon" id="pauseBtn" title="Pause/Resume" style="display: none;">⏸</button>
+              <button class="btn-icon" id="skipBtn" title="Skip Current Tweet" style="display: none;">⏭</button>
+            </div>
+          </div>
+          <div class="master-control-status">
+            <span class="status-dot" id="statusDot"></span>
+            <span class="master-control-status-text" id="statusText">Idle</span>
+          </div>
+        </div>
+
+        <!-- Live AI Status -->
+        <div class="ai-status" id="aiLiveStatus" style="display: none; margin: 0.75rem 0; padding: 0.75rem; border-radius: 8px; background: #1e293b; border: 1px solid #334155;">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span id="aiLiveStatusIcon" style="font-size: 1rem;">⚡</span>
+            <span id="aiLiveStatusText" style="font-size: 0.875rem; color: #e2e8f0; flex: 1;">AI is ready</span>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value accent" id="totalLikes">0</div>
+            <div class="stat-label">Total Likes</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value accent" id="totalReplies">0</div>
+            <div class="stat-label">AI Replies</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value accent" id="totalFollows">0</div>
+            <div class="stat-label">New Follows</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="sessionTime">00:00</div>
+            <div class="stat-label">Session Time</div>
+          </div>
+        </div>
+
+        <div class="pipeline-wrap">
+          <div class="pipeline-step">
+            <div class="pipeline-step-icon" id="stepScan">○</div>
+            <div class="pipeline-step-label">Scan</div>
+          </div>
+          <div class="pipeline-step">
+            <div class="pipeline-step-icon" id="stepAnalyze">○</div>
+            <div class="pipeline-step-label">Analyze</div>
+          </div>
+          <div class="pipeline-step">
+            <div class="pipeline-step-icon" id="stepEngage">○</div>
+            <div class="pipeline-step-label">Engage</div>
+          </div>
+          <div class="pipeline-step">
+            <div class="pipeline-step-icon" id="stepVerify">○</div>
+            <div class="pipeline-step-label">Verify</div>
+          </div>
+        </div>
+
+        <div class="current-task hidden" id="currentTask">
+          <div class="current-task-label">Current Task</div>
+          <div class="current-task-text" id="currentTaskText">Scanning feed for engagement targets...</div>
+        </div>
+      </section>
+
+      <!-- Queue Tab -->
+      <section id="queueTab" class="tab-content">
+        <div class="section-header">
+          <span>Engagement Queue</span>
+          <span class="pill pill-neutral" id="queueCount">0 items</span>
+        </div>
+        <div class="queue-list" id="queueList">
+          <div class="empty-state">
+            <div class="empty-state-icon">○</div>
+            <div class="empty-state-title">Queue is empty</div>
+            <div class="empty-state-desc">Start the engine to begin scanning for engagement targets.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- History Tab -->
+      <section id="historyTab" class="tab-content">
+        <div class="section-header">
+          <span>Activity History</span>
+          <button class="btn-xs btn-ghost" id="clearHistory">Clear</button>
+        </div>
+        <div class="activity-list" id="activityList">
+          <div class="empty-state">
+            <div class="empty-state-icon">■</div>
+            <div class="empty-state-title">No activity yet</div>
+            <div class="empty-state-desc">Your engagement history will appear here.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- AI Tab -->
+      <section id="aiTab" class="tab-content">
+        <div class="section-header">
+          <span>AI Backend</span>
+          <span class="status-badge status-inactive" id="aiStatus">AI Backend Disabled</span>
+        </div>
+
+        <div class="settings-group">
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">Enable AI Backend</div>
+              <div class="setting-desc">Use your backend server for AI-generated replies</div>
+            </div>
+            <label class="toggle-sm">
+              <input type="checkbox" id="aiEnabled">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">Backend URL</div>
+              <div class="setting-desc">Your backend server address</div>
+            </div>
+            <input type="text" class="setting-input" id="aiUrl" value="http://localhost:3000" placeholder="http://localhost:3000">
+          </div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">API Key</div>
+              <div class="setting-desc">Authentication token from your dashboard</div>
+            </div>
+            <input type="password" class="setting-input" id="aiKey" placeholder="Enter your API key">
+          </div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">Model</div>
+              <div class="setting-desc">AI model to use (optional)</div>
+            </div>
+            <input type="text" class="setting-input" id="aiModel" value="gemini-1.5-flash" placeholder="gemini-1.5-flash">
+          </div>
+          <div class="setting-row">
+            <button class="btn btn-primary" id="saveAIBackend">Save Settings</button>
+            <button class="btn btn-secondary" id="testAIBackend">Test Connection</button>
+          </div>
+        </div>
+
+        <div class="section-header" style="margin-top: 1.5rem;">
+          <span>AI Reply Preview</span>
+        </div>
+
+        <div class="settings-group">
+          <div class="setting-row" style="flex-direction: column; align-items: stretch;">
+            <label>Tweet Text</label>
+            <textarea class="setting-input" id="previewTweet" rows="4" placeholder="Paste a tweet text here to generate an AI reply..."></textarea>
+          </div>
+          <div class="setting-row" style="flex-direction: column; align-items: stretch;">
+            <label>Generated Reply</label>
+            <textarea class="setting-input" id="previewReply" rows="3" readonly placeholder="AI-generated reply will appear here..."></textarea>
+          </div>
+          <div class="setting-row">
+            <button class="btn btn-primary" id="previewGenerateBtn">
+              Generate Reply
+              <span class="loading" id="previewSpinner" style="display: none; margin-left: 0.5rem;"></span>
+            </button>
+            <button class="btn btn-secondary" id="previewUseBtn">Use Reply</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Advanced Tab -->
+      <section id="advancedTab" class="tab-content">
+        <div class="section-header">
+          <span>Advanced Options</span>
+        </div>
+
+        <div class="settings-group">
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">Debug Mode</div>
+              <div class="setting-desc">Show detailed console logs for troubleshooting</div>
+            </div>
+            <label class="toggle-sm">
+              <input type="checkbox" id="debugMode">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">Auto-Scroll Speed</div>
+              <div class="setting-desc">Pixels per scroll step (default: 800)</div>
+            </div>
+            <input type="number" class="setting-input" id="scrollSpeed" value="800" min="100" max="2000" step="100">
+          </div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">Max Scroll Attempts</div>
+              <div class="setting-desc">Before giving up on finding tweets (default: 10)</div>
+            </div>
+            <input type="number" class="setting-input" id="maxScrollAttempts" value="10" min="3" max="50">
+          </div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">Reply Delay Multiplier</div>
+              <div class="setting-desc">Extra delay after posting reply (default: 1.5x)</div>
+            </div>
+            <input type="number" class="setting-input" id="replyDelayMult" value="1.5" min="1" max="5" step="0.5">
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <div class="setting-row">
+            <button class="btn btn-secondary" id="resetStats">Reset Session Stats</button>
+          </div>
+          <div class="setting-row">
+            <button class="btn btn-secondary" id="clearCache">Clear Tweet Cache</button>
+          </div>
+          <div class="setting-row">
+            <button class="btn btn-secondary" id="exportStats">Export Stats to JSON</button>
+          </div>
+          <div class="setting-row">
+            <input type="file" id="importStatsFile" accept=".json" style="display: none;">
+            <button class="btn btn-secondary" id="importStats">Import Stats from JSON</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Settings Tab -->
+      <section id="settingsTab" class="tab-content">
+        <div class="section-header">
+          <span>Configuration</span>
+        </div>
+
+        <div class="settings-group">
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">Operation Mode</div>
+              <div class="setting-desc">Choose between feed engagement or follower growth</div>
+            </div>
+            <select class="setting-input" id="sidepanelOperationMode">
+              <option value="engagement" selected>Feed Engagement</option>
+              <option value="followers">Follower Growth</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-group" id="followerSettings">
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">Target Follows</div>
+              <div class="setting-desc">Number of accounts to follow per session</div>
+            </div>
+            <input type="number" class="setting-input" id="sidepanelTargetFollows" value="50" min="1" max="500">
+          </div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">Follower Speed</div>
+              <div class="setting-desc">Delay between follows (seconds)</div>
+            </div>
+            <select class="setting-input" id="followerSpeed">
+              <option value="slow">Slow (8-15s)</option>
+              <option value="medium" selected>Medium (4-8s)</option>
+              <option value="fast">Fast (2-4s)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">LinkedIn Auto-Like</div>
+              <div class="setting-desc">Automatically like posts in your feed</div>
+            </div>
+            <label class="toggle-sm">
+              <input type="checkbox" id="settingLinkedInLike" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">LinkedIn AI Replies</div>
+              <div class="setting-desc">Generate contextual replies using AI</div>
+            </div>
+            <label class="toggle-sm">
+              <input type="checkbox" id="settingLinkedInReply" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">Twitter/X Auto-Like</div>
+              <div class="setting-desc">Automatically like tweets in your feed</div>
+            </div>
+            <label class="toggle-sm">
+              <input type="checkbox" id="settingTwitterLike" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">Twitter/X AI Replies</div>
+              <div class="setting-desc">Generate contextual replies using AI</div>
+            </div>
+            <label class="toggle-sm">
+              <input type="checkbox" id="settingTwitterReply" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">Daily Limit</div>
+              <div class="setting-desc">Maximum engagements per day</div>
+            </div>
+            <input type="number" class="setting-input" id="dailyLimit" value="50" min="10" max="500">
+            <button class="btn btn-secondary" id="updateLimitBtn">Update</button>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">Engagement Delay</div>
+              <div class="setting-desc">Minimum seconds between actions</div>
+            </div>
+            <input type="number" class="setting-input" id="engagementDelay" value="30" min="5" max="300">
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <button class="btn btn-full btn-primary" id="saveSettings">Save Settings</button>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast" id="toast"></div>
+  </div>
+  <script src="sidepanel.js"></script>
+</body>
+</html>
