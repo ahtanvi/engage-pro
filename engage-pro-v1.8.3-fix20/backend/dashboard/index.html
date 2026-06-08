@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Engage Pro - AI Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #334155;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      color: #f8fafc;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo {
+      width: 32px;
+      height: 32px;
+      background: #3b82f6;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: white;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid #334155;
+      padding-bottom: 0;
+    }
+
+    .tab {
+      padding: 0.75rem 1.5rem;
+      background: none;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .tab:hover {
+      color: #e2e8f0;
+    }
+
+    .tab.active {
+      color: #3b82f6;
+      border-bottom-color: #3b82f6;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .card {
+      background: #1e293b;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid #334155;
+    }
+
+    .card h2 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      color: #f8fafc;
+    }
+
+    .card h3 {
+      font-size: 0.95rem;
+      margin-bottom: 0.75rem;
+      color: #cbd5e1;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: #cbd5e1;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 0.75rem;
+      background: #0f172a;
+      border: 1px solid #475569;
+      border-radius: 8px;
+      color: #e2e8f0;
+      font-size: 0.875rem;
+      font-family: inherit;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #3b82f6;
+    }
+
+    textarea {
+      min-height: 200px;
+      resize: vertical;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #2563eb;
+    }
+
+    .btn-secondary {
+      background: #334155;
+      color: #e2e8f0;
+    }
+
+    .btn-secondary:hover {
+      background: #475569;
+    }
+
+    .btn-danger {
+      background: #ef4444;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #dc2626;
+    }
+
+    .btn-success {
+      background: #22c55e;
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #16a34a;
+    }
+
+    .alert {
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-size: 0.875rem;
+    }
+
+    .alert-success {
+      background: #064e3b;
+      border: 1px solid #059669;
+      color: #6ee7b7;
+    }
+
+    .alert-error {
+      background: #450a0a;
+      border: 1px solid #dc2626;
+      color: #fca5a5;
+    }
+
+    .alert-info {
+      background: #1e3a5f;
+      border: 1px solid #3b82f6;
+      color: #93c5fd;
+    }
+
+    .model-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background: #0f172a;
+      border-radius: 8px;
+      margin-bottom: 0.75rem;
+      border: 1px solid #334155;
+    }
+
+    .model-card.active {
+      border-color: #3b82f6;
+      background: #1e3a5f;
+    }
+
+    .model-info h4 {
+      font-size: 0.95rem;
+      color: #f8fafc;
+      margin-bottom: 0.25rem;
+    }
+
+    .model-info p {
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+
+    .badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .badge-active {
+      background: #064e3b;
+      color: #6ee7b7;
+    }
+
+    .badge-inactive {
+      background: #334155;
+      color: #94a3b8;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background: #1e293b;
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid #334155;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #f8fafc;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: #94a3b8;
+    }
+
+    .history-item {
+      padding: 1rem;
+      background: #0f172a;
+      border-radius: 8px;
+      margin-bottom: 0.75rem;
+      border: 1px solid #334155;
+    }
+
+    .history-item p {
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .history-meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.75rem;
+      color: #64748b;
+    }
+
+    .template-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 1rem;
+      background: #0f172a;
+      border-radius: 8px;
+      margin-bottom: 0.75rem;
+      border: 1px solid #334155;
+    }
+
+    .template-content {
+      flex: 1;
+    }
+
+    .template-content h4 {
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .template-content p {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      font-family: monospace;
+    }
+
+    .token-display {
+      background: #0f172a;
+      padding: 1rem;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 0.875rem;
+      word-break: break-all;
+      border: 1px solid #334155;
+      margin-bottom: 1rem;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #334155;
+      border-top-color: #3b82f6;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .api-key-input {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .api-key-input input {
+      flex: 1;
+    }
+
+    .char-count {
+      font-size: 0.75rem;
+      color: #64748b;
+      text-align: right;
+      margin-top: 0.25rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: #64748b;
+    }
+
+    .empty-state p {
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>
+        <div class="logo">EP</div>
+        Engage Pro AI Dashboard
+      </h1>
+      <div class="status">
+        <span class="status-dot"></span>
+        <span id="serverStatus">Connected</span>
+      </div>
+    </header>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="models">AI Models</button>
+      <button class="tab" data-tab="prompts">System Prompt</button>
+      <button class="tab" data-tab="templates">Templates</button>
+      <button class="tab" data-tab="history">History</button>
+      <button class="tab" data-tab="stats">Stats</button>
+      <button class="tab" data-tab="tokens">API Keys</button>
+    </div>
+
+    <!-- Models Tab -->
+    <div class="tab-content active" id="models-tab">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="totalGenerated">-</div>
+          <div class="stat-label">Total Generated</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalPosted">-</div>
+          <div class="stat-label">Posted to Twitter</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="cacheHits">-</div>
+          <div class="stat-label">Cache Hits</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="activeModel">-</div>
+          <div class="stat-label">Active Model</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Available AI Providers</h2>
+        <div id="modelsList"></div>
+      </div>
+
+      <div class="card">
+        <h2>API Key Configuration</h2>
+        <div id="apiKeyForms"></div>
+      </div>
+    </div>
+
+    <!-- Prompts Tab -->
+    <div class="tab-content" id="prompts-tab">
+      <div class="card">
+        <h2>System Prompt</h2>
+        <p style="font-size: 0.875rem; color: #94a3b8; margin-bottom: 1rem;">
+          This prompt guides how the AI generates replies. Edit it to change the tone, style, and behavior.
+        </p>
+        <div class="form-group">
+          <label for="promptName">Prompt Name</label>
+          <input type="text" id="promptName" readonly>
+        </div>
+        <div class="form-group">
+          <label for="promptText">Prompt Content</label>
+          <textarea id="promptText" placeholder="Enter system prompt..."></textarea>
+          <div class="char-count"><span id="promptChars">0</span> characters</div>
+        </div>
+        <button class="btn btn-primary" onclick="savePrompt()">
+          Save Prompt
+        </button>
+      </div>
+
+      <div class="card">
+        <h2>Create New Prompt</h2>
+        <div class="form-group">
+          <label for="newPromptName">Name</label>
+          <input type="text" id="newPromptName" placeholder="e.g., casual, professional, witty">
+        </div>
+        <div class="form-group">
+          <label for="newPromptText">Prompt Content</label>
+          <textarea id="newPromptText" placeholder="Enter new system prompt..."></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="createPrompt()">
+          Create Prompt
+        </button>
+      </div>
+    </div>
+
+    <!-- Templates Tab -->
+    <div class="tab-content" id="templates-tab">
+      <div class="card">
+        <h2>Custom Templates</h2>
+        <p style="font-size: 0.875rem; color: #94a3b8; margin-bottom: 1rem;">
+          Create reusable templates with variables like {{username}}, {{topic}}, etc.
+        </p>
+        <div id="templatesList"></div>
+      </div>
+
+      <div class="card">
+        <h2>Create Template</h2>
+        <div class="form-group">
+          <label for="templateName">Template Name</label>
+          <input type="text" id="templateName" placeholder="e.g., tech reply, appreciation">
+        </div>
+        <div class="form-group">
+          <label for="templateText">Template Content</label>
+          <textarea id="templateText" placeholder="Hey {{username}}, great point about {{topic}}! I think..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="templateVars">Variables (comma-separated)</label>
+          <input type="text" id="templateVars" placeholder="username, topic">
+        </div>
+        <button class="btn btn-primary" onclick="createTemplate()">
+          Create Template
+        </button>
+      </div>
+    </div>
+
+    <!-- History Tab -->
+    <div class="tab-content" id="history-tab">
+      <div class="card">
+        <h2>Generated Comments History</h2>
+        <div id="historyList"></div>
+        <div id="historyPagination" style="display: flex; gap: 0.5rem; margin-top: 1rem;"></div>
+      </div>
+    </div>
+
+    <!-- Stats Tab -->
+    <div class="tab-content" id="stats-tab">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="totalSessions">-</div>
+          <div class="stat-label">Total Sessions</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalLikes">-</div>
+          <div class="stat-label">Total Likes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalReplies">-</div>
+          <div class="stat-label">Total Replies</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalFollows">-</div>
+          <div class="stat-label">Total Follows</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Daily Activity (Last 30 Days)</h2>
+        <div id="dailyStatsChart"></div>
+      </div>
+
+      <div class="card">
+        <h2>Recent Sessions</h2>
+        <div id="sessionsList"></div>
+      </div>
+    </div>
+
+    <!-- Tokens Tab -->
+    <div class="tab-content" id="tokens-tab">
+      <div class="card">
+        <h2>API Authentication</h2>
+        <p style="font-size: 0.875rem; color: #94a3b8; margin-bottom: 1rem;">
+          Generate API keys for your Chrome extension to authenticate with this backend.
+        </p>
+        
+        <div class="form-group">
+          <label for="tokenName">Token Name</label>
+          <input type="text" id="tokenName" placeholder="e.g., My Laptop, Work PC">
+        </div>
+        <button class="btn btn-primary" onclick="generateToken()">
+          Generate New Token
+        </button>
+
+        <div id="newToken" class="hidden" style="margin-top: 1rem;">
+          <div class="alert alert-success">
+            <strong>Token created! Copy it now - it won't be shown again.</strong>
+          </div>
+          <div class="token-display" id="tokenValue"></div>
+          <button class="btn btn-secondary" onclick="copyToken()">
+            Copy to Clipboard
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Active Tokens</h2>
+        <div id="tokensList"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = window.location.origin + '/api';
+    let currentTab = 'models';
+    let historyOffset = 0;
+    const historyLimit = 20;
+
+    // Helper to make authenticated requests from dashboard (no auth needed for dashboard)
+    async function apiGet(path) {
+      return fetch(`${API_BASE}${path}`);
+    }
+    async function apiPost(path, body) {
+      return fetch(`${API_BASE}${path}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: body ? JSON.stringify(body) : undefined
+      });
+    }
+
+    // Tab switching
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab + '-tab').classList.add('active');
+        currentTab = tab.dataset.tab;
+        
+        // Load tab data
+        if (currentTab === 'models') loadModels();
+        if (currentTab === 'prompts') loadPrompts();
+        if (currentTab === 'templates') loadTemplates();
+        if (currentTab === 'history') loadHistory();
+        if (currentTab === 'tokens') loadTokens();
+      });
+    });
+
+    // Load models and stats
+    async function loadModels() {
+      try {
+        const [modelsRes, statsRes, cacheRes] = await Promise.all([
+          apiGet('/models'),
+          apiGet('/history/stats'),
+          apiGet('/settings/cache')
+        ]);
+
+        const models = await modelsRes.json();
+        const stats = await statsRes.json();
+        const cache = await cacheRes.json();
+
+        document.getElementById('totalGenerated').textContent = stats.totalGenerated || 0;
+        document.getElementById('totalPosted').textContent = stats.totalPosted || 0;
+        document.getElementById('cacheHits').textContent = (cache.total_uses - cache.total_cached) || 0;
+        
+        const activeModel = models.models.find(m => m.is_active);
+        document.getElementById('activeModel').textContent = activeModel ? activeModel.provider : '-';
+
+        // Render models list
+        const modelsList = document.getElementById('modelsList');
+        modelsList.innerHTML = models.models.map(model => `
+          <div class="model-card ${model.is_active ? 'active' : ''}">
+            <div class="model-info">
+              <h4>${model.provider.toUpperCase()}</h4>
+              <p>${model.model || 'No model set'} ${model.has_key ? '✓ Key set' : '✗ No key'}</p>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <span class="badge ${model.is_active ? 'badge-active' : 'badge-inactive'}">
+                ${model.is_active ? 'Active' : 'Inactive'}
+              </span>
+              ${!model.is_active ? `
+                <button class="btn btn-secondary" onclick="activateModel('${model.provider}')">
+                  Activate
+                </button>
+              ` : ''}
+            </div>
+          </div>
+        `).join('');
+
+        // Render API key forms with model input and test button
+        const apiKeyForms = document.getElementById('apiKeyForms');
+        apiKeyForms.innerHTML = models.models.map(model => `
+          <div style="margin-bottom: 1.5rem; border: 1px solid #334155; border-radius: 8px; padding: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+              <strong style="color: #f8fafc;">${model.provider.toUpperCase()}</strong>
+              <span class="badge ${model.is_active ? 'badge-active' : 'badge-inactive'}">
+                ${model.is_active ? 'Active' : 'Inactive'}
+              </span>
+            </div>
+            
+            <div style="margin-bottom: 0.75rem;">
+              <label style="display: block; margin-bottom: 0.25rem; color: #94a3b8; font-size: 0.8rem;">Model Name</label>
+              <input type="text" id="model-${model.provider}" 
+                value="${model.model || ''}" 
+                placeholder="e.g., gemini-1.5-flash, gpt-3.5-turbo, meta-llama/llama-3.1-8b-instruct"
+                style="width: 100%; padding: 0.5rem; background: #0f172a; border: 1px solid #475569; border-radius: 6px; color: #e2e8f0; font-size: 0.875rem;"
+              >
+            </div>
+            
+            <div style="margin-bottom: 0.75rem;">
+              <label style="display: block; margin-bottom: 0.25rem; color: #94a3b8; font-size: 0.8rem;">API Key</label>
+              <div class="api-key-input">
+                <input type="password" id="key-${model.provider}" placeholder="Enter API key..." value="${model.has_key ? '••••••••••••' : ''}"
+                  style="flex: 1; padding: 0.5rem; background: #0f172a; border: 1px solid #475569; border-radius: 6px; color: #e2e8f0; font-size: 0.875rem;"
+                >
+                <button class="btn btn-primary" onclick="saveApiKey('${model.provider}')" style="padding: 0.5rem 1rem;">
+                  Save
+                </button>
+              </div>
+            </div>
+            
+            <div style="display: flex; gap: 0.5rem;">
+              <button class="btn btn-secondary" onclick="testProvider('${model.provider}')" style="font-size: 0.8rem; padding: 0.4rem 0.75rem;">
+                Test Connection
+              </button>
+              <button class="btn btn-secondary" onclick="saveModelName('${model.provider}')" style="font-size: 0.8rem; padding: 0.4rem 0.75rem;">
+                Update Model
+              </button>
+              ${model.provider === 'openrouter' ? `
+                <button class="btn btn-secondary" onclick="loadOpenRouterModels()" style="font-size: 0.8rem; padding: 0.4rem 0.75rem;">
+                  Browse Models
+                </button>
+              ` : ''}
+            </div>
+            
+            <div id="test-result-${model.provider}" style="margin-top: 0.5rem; font-size: 0.8rem;"></div>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error('Failed to load models:', err);
+        showAlert('Failed to load models', 'error');
+      }
+    }
+
+    async function activateModel(provider) {
+      try {
+        const res = await apiPost(`/models/${provider}/activate`);
+        const data = await res.json();
+        if (data.success) {
+          showAlert(`${provider} is now active`, 'success');
+          loadModels();
+        }
+      } catch (err) {
+        showAlert('Failed to activate model', 'error');
+      }
+    }
+
+    async function saveApiKey(provider) {
+      const key = document.getElementById(`key-${provider}`).value;
+      if (!key || key === '••••••••••••') return;
+
+      try {
+        const res = await apiPost(`/models/${provider}/key`, { apiKey: key });
+        const data = await res.json();
+        if (data.success) {
+          showAlert('API key saved', 'success');
+          loadModels();
+        }
+      } catch (err) {
+        showAlert('Failed to save API key', 'error');
+      }
+    }
+
+    async function saveModelName(provider) {
+      const model = document.getElementById(`model-${provider}`).value;
+      if (!model) {
+        showAlert('Please enter a model name', 'error');
+        return;
+      }
+      
+      try {
+        const res = await apiPost(`/models/${provider}/model`, { model });
+        const data = await res.json();
+        if (data.success) {
+          showAlert(`Model updated to ${model}`, 'success');
+          loadModels();
+        }
+      } catch (err) {
+        showAlert('Failed to update model', 'error');
+      }
+    }
+
+    async function testProvider(provider) {
+      const resultDiv = document.getElementById(`test-result-${provider}`);
+      resultDiv.innerHTML = '<span style="color: #94a3b8;">Testing...</span>';
+      
+      try {
+        const res = await apiPost(`/models/${provider}/test`);
+        const data = await res.json();
+        
+        if (data.success) {
+          resultDiv.innerHTML = `<span style="color: #22c55e;">✓ ${data.message} (${data.latency_ms}ms)</span>
+            <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.25rem;">Model: ${data.model}</div>
+          `;
+        } else {
+          resultDiv.innerHTML = `<span style="color: #ef4444;">✗ ${data.message}</span>
+            ${data.error ? `<div style="font-size: 0.75rem; color: #64748b; margin-top: 0.25rem;">${data.error}</div>` : ''}
+          `;
+        }
+      } catch (err) {
+        resultDiv.innerHTML = `<span style="color: #ef4444;">✗ Test failed: ${err.message}</span>`;
+      }
+    }
+
+    let openRouterModels = [];
+    
+    async function loadOpenRouterModels() {
+      const resultDiv = document.getElementById('test-result-openrouter');
+      resultDiv.innerHTML = '<span style="color: #94a3b8;">Loading OpenRouter models...</span>';
+      
+      try {
+        const res = await apiGet('/models/openrouter/list');
+        const data = await res.json();
+        
+        if (data.models) {
+          openRouterModels = data.models;
+          
+          // Show model selection modal
+          const modalHtml = `
+            <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; align-items: center; justify-content: center;">
+              <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; width: 90%; max-width: 800px; max-height: 80vh; overflow: hidden;">
+                <div style="padding: 1rem; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center;">
+                  <h3 style="margin: 0; color: #f8fafc;">OpenRouter Models</h3>
+                  <button onclick="closeOpenRouterModal()" style="background: none; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer;">×</button>
+                </div>
+                <div style="padding: 1rem; overflow-y: auto; max-height: 60vh;">
+                  <div style="margin-bottom: 1rem;">
+                    <input type="text" id="or-search" placeholder="Search models..." 
+                      style="width: 100%; padding: 0.5rem; background: #0f172a; border: 1px solid #475569; border-radius: 6px; color: #e2e8f0;"
+                      oninput="filterOpenRouterModels()"
+                    >
+                  </div>
+                  <div id="or-model-list">${renderOpenRouterModels(data.models)}</div>
+                </div>
+              </div>
+            </div>
+          `;
+          
+          const modal = document.createElement('div');
+          modal.id = 'or-modal';
+          modal.innerHTML = modalHtml;
+          document.body.appendChild(modal);
+          
+          resultDiv.innerHTML = `<span style="color: #22c55e;">✓ Loaded ${data.models.length} models</span>`;
+        }
+      } catch (err) {
+        resultDiv.innerHTML = `<span style="color: #ef4444;">✗ Failed to load models: ${err.message}</span>`;
+      }
+    }
+    
+    function renderOpenRouterModels(models) {
+      return models.slice(0, 50).map(m => `
+        <div style="padding: 0.75rem; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center;">
+          <div style="flex: 1; min-width: 0;">
+            <div style="font-weight: 500; color: #f8fafc; font-size: 0.875rem;">${m.name}</div>
+            <div style="font-size: 0.75rem; color: #64748b;">${m.id}</div>
+            <div style="font-size: 0.75rem; color: #94a3b8;">${m.top_provider} · ${m.context_length?.toLocaleString() || '?'} context</div>
+          </div>
+          <div style="text-align: right; margin-left: 1rem;">
+            <div style="font-size: 0.875rem; color: #22c55e; font-weight: 500;">$${m.pricing.total}/1M tokens</div>
+            <button onclick="selectOpenRouterModel('${m.id}')" 
+              style="margin-top: 0.25rem; padding: 0.25rem 0.75rem; background: #3b82f6; color: white; border: none; border-radius: 4px; font-size: 0.75rem; cursor: pointer;"
+            >Select</button>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    function filterOpenRouterModels() {
+      const search = document.getElementById('or-search').value.toLowerCase();
+      const filtered = openRouterModels.filter(m => 
+        m.name.toLowerCase().includes(search) || 
+        m.id.toLowerCase().includes(search)
+      );
+      document.getElementById('or-model-list').innerHTML = renderOpenRouterModels(filtered);
+    }
+    
+    function selectOpenRouterModel(modelId) {
+      document.getElementById('model-openrouter').value = modelId;
+      closeOpenRouterModal();
+      showAlert(`Selected model: ${modelId}`, 'success');
+    }
+    
+    function closeOpenRouterModal() {
+      const modal = document.getElementById('or-modal');
+      if (modal) modal.remove();
+    }
+
+    // Load prompts
+    async function loadPrompts() {
+      try {
+        const res = await apiGet('/settings/prompt');
+        const data = await res.json();
+        
+        document.getElementById('promptName').value = data.name || 'default';
+        document.getElementById('promptText').value = data.prompt || '';
+        document.getElementById('promptChars').textContent = (data.prompt || '').length;
+      } catch (err) {
+        console.error('Failed to load prompt:', err);
+      }
+    }
+
+    document.getElementById('promptText').addEventListener('input', (e) => {
+      document.getElementById('promptChars').textContent = e.target.value.length;
+    });
+
+    async function savePrompt() {
+      const name = document.getElementById('promptName').value;
+      const prompt = document.getElementById('promptText').value;
+
+      try {
+        const res = await apiPost('/settings/prompt', { name, prompt });
+        const data = await res.json();
+        if (data.success) {
+          showAlert('Prompt saved successfully', 'success');
+        }
+      } catch (err) {
+        showAlert('Failed to save prompt', 'error');
+      }
+    }
+
+    async function createPrompt() {
+      const name = document.getElementById('newPromptName').value;
+      const prompt = document.getElementById('newPromptText').value;
+
+      if (!name || !prompt) {
+        showAlert('Name and prompt are required', 'error');
+        return;
+      }
+
+      try {
+        const res = await apiPost('/settings/prompt/new', { name, prompt });
+        const data = await res.json();
+        if (data.success) {
+          showAlert('Prompt created', 'success');
+          document.getElementById('newPromptName').value = '';
+          document.getElementById('newPromptText').value = '';
+        }
+      } catch (err) {
+        showAlert('Failed to create prompt', 'error');
+      }
+    }
+
+    // Load templates
+    async function loadTemplates() {
+      try {
+        const res = await apiGet('/templates');
+        const data = await res.json();
+        
+        const list = document.getElementById('templatesList');
+        if (data.templates.length === 0) {
+          list.innerHTML = `
+            <div class="empty-state">
+              <p>No templates yet</p>
+              <p>Create your first template below</p>
+            </div>
+          `;
+          return;
+        }
+
+        list.innerHTML = data.templates.map(t => `
+          <div class="template-item">
+            <div class="template-content">
+              <h4>${t.name}</h4>
+              <p>${t.template}</p>
+              <div style="margin-top: 0.5rem;">
+                ${t.variables.map(v => `<span class="badge badge-inactive">${v}</span>`).join(' ')}
+              </div>
+            </div>
+            <button class="btn btn-danger" onclick="deleteTemplate(${t.id})">
+              Delete
+            </button>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error('Failed to load templates:', err);
+      }
+    }
+
+    async function createTemplate() {
+      const name = document.getElementById('templateName').value;
+      const template = document.getElementById('templateText').value;
+      const vars = document.getElementById('templateVars').value.split(',').map(v => v.trim()).filter(v => v);
+
+      if (!name || !template) {
+        showAlert('Name and template are required', 'error');
+        return;
+      }
+
+      try {
+        const res = await apiPost('/templates', { name, template, variables: vars });
+        const data = await res.json();
+        if (data.success) {
+          showAlert('Template created', 'success');
+          document.getElementById('templateName').value = '';
+          document.getElementById('templateText').value = '';
+          document.getElementById('templateVars').value = '';
+          loadTemplates();
+        }
+      } catch (err) {
+        showAlert('Failed to create template', 'error');
+      }
+    }
+
+    async function deleteTemplate(id) {
+      if (!confirm('Delete this template?')) return;
+      
+      try {
+        const res = await apiPost(`/templates/${id}`, null);
+        // DELETE method not supported by apiPost, use fetch directly
+        const delRes = await fetch(`${API_BASE}/templates/${id}`, { method: 'DELETE' });
+        const data = await delRes.json();
+        if (data.success) {
+          showAlert('Template deleted', 'success');
+          loadTemplates();
+        }
+      } catch (err) {
+        showAlert('Failed to delete template', 'error');
+      }
+    }
+
+    // Load history
+    async function loadHistory() {
+      try {
+        const res = await apiGet(`/history?limit=${historyLimit}&offset=${historyOffset}`);
+        const data = await res.json();
+        
+        const list = document.getElementById('historyList');
+        if (data.comments.length === 0) {
+          list.innerHTML = `
+            <div class="empty-state">
+              <p>No generated comments yet</p>
+              <p>Start using the extension to see history</p>
+            </div>
+          `;
+          return;
+        }
+
+        list.innerHTML = data.comments.map(c => `
+          <div class="history-item">
+            <p style="color: #94a3b8; margin-bottom: 0.5rem;"><strong>Original:</strong> ${escapeHtml(c.tweet_text.substring(0, 100))}${c.tweet_text.length > 100 ? '...' : ''}</p>
+            <p style="color: #f8fafc;"><strong>Reply:</strong> ${escapeHtml(c.generated_reply)}</p>
+            <div class="history-meta">
+              <span>@${escapeHtml(c.tweet_author || 'unknown')}</span>
+              <span>${c.model_used}</span>
+              <span>${new Date(c.created_at).toLocaleString()}</span>
+              <span class="badge ${c.was_posted ? 'badge-active' : 'badge-inactive'}">
+                ${c.was_posted ? 'Posted' : 'Not posted'}
+              </span>
+            </div>
+          </div>
+        `).join('');
+
+        // Pagination
+        const pagination = document.getElementById('historyPagination');
+        pagination.innerHTML = `
+          <button class="btn btn-secondary" ${historyOffset === 0 ? 'disabled' : ''} onclick="changePage(-1)">
+            Previous
+          </button>
+          <span style="padding: 0.75rem;">Page ${Math.floor(historyOffset / historyLimit) + 1}</span>
+          <button class="btn btn-secondary" ${!data.pagination.hasMore ? 'disabled' : ''} onclick="changePage(1)">
+            Next
+          </button>
+        `;
+      } catch (err) {
+        console.error('Failed to load history:', err);
+      }
+    }
+
+    function changePage(direction) {
+      historyOffset += direction * historyLimit;
+      if (historyOffset < 0) historyOffset = 0;
+      loadHistory();
+    }
+
+    // Load tokens
+    async function loadTokens() {
+      try {
+        const res = await apiGet('/auth/tokens');
+        const data = await res.json();
+        
+        const list = document.getElementById('tokensList');
+        if (data.tokens.length === 0) {
+          list.innerHTML = `
+            <div class="empty-state">
+              <p>No tokens yet</p>
+              <p>Generate a token for your extension</p>
+            </div>
+          `;
+          return;
+        }
+
+        list.innerHTML = data.tokens.map(t => `
+          <div class="model-card">
+            <div class="model-info">
+              <h4>${escapeHtml(t.name || 'Unnamed')}</h4>
+              <p>Token: ${t.token_preview} | Last used: ${t.last_used ? new Date(t.last_used).toLocaleString() : 'Never'}</p>
+            </div>
+            <button class="btn btn-danger" onclick="revokeToken(${t.id})">
+              Revoke
+            </button>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error('Failed to load tokens:', err);
+      }
+    }
+
+    async function generateToken() {
+      const name = document.getElementById('tokenName').value;
+      if (!name) {
+        showAlert('Please enter a token name', 'error');
+        return;
+      }
+
+      try {
+        const res = await apiPost('/auth/token', { name });
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('tokenValue').textContent = data.token;
+          document.getElementById('newToken').classList.remove('hidden');
+          document.getElementById('tokenName').value = '';
+          loadTokens();
+        }
+      } catch (err) {
+        showAlert('Failed to generate token', 'error');
+      }
+    }
+
+    function copyToken() {
+      const token = document.getElementById('tokenValue').textContent;
+      navigator.clipboard.writeText(token).then(() => {
+        showAlert('Token copied to clipboard', 'success');
+      });
+    }
+
+    async function revokeToken(id) {
+      if (!confirm('Revoke this token? The extension using it will stop working.')) return;
+      
+      try {
+        const res = await fetch(`${API_BASE}/auth/tokens/${id}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) {
+          showAlert('Token revoked', 'success');
+          loadTokens();
+        }
+      } catch (err) {
+        showAlert('Failed to revoke token', 'error');
+      }
+    }
+
+    // Utilities
+    function showAlert(message, type) {
+      const alert = document.createElement('div');
+      alert.className = `alert alert-${type}`;
+      alert.textContent = message;
+      document.querySelector('.container').insertBefore(alert, document.querySelector('.tabs'));
+      setTimeout(() => alert.remove(), 5000);
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Load stats
+    async function loadStats() {
+      try {
+        const [sessionsRes, dailyRes] = await Promise.all([
+          apiGet('/history/sessions'),
+          apiGet('/history/daily?days=30')
+        ]);
+
+        const sessions = await sessionsRes.json();
+        const daily = await dailyRes.json();
+
+        // Calculate totals
+        const totalLikes = daily.stats.reduce((sum, d) => sum + (d.likes || 0), 0);
+        const totalReplies = daily.stats.reduce((sum, d) => sum + (d.replies || 0), 0);
+        const totalFollows = daily.stats.reduce((sum, d) => sum + (d.follows || 0), 0);
+
+        document.getElementById('totalSessions').textContent = sessions.sessions?.length || 0;
+        document.getElementById('totalLikes').textContent = totalLikes;
+        document.getElementById('totalReplies').textContent = totalReplies;
+        document.getElementById('totalFollows').textContent = totalFollows;
+
+        // Render daily stats chart (simple table)
+        const chartDiv = document.getElementById('dailyStatsChart');
+        if (daily.stats.length > 0) {
+          chartDiv.innerHTML = `
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr style="border-bottom: 1px solid #334155;">
+                  <th style="text-align: left; padding: 0.5rem; color: #94a3b8;">Date</th>
+                  <th style="text-align: right; padding: 0.5rem; color: #94a3b8;">Likes</th>
+                  <th style="text-align: right; padding: 0.5rem; color: #94a3b8;">Replies</th>
+                  <th style="text-align: right; padding: 0.5rem; color: #94a3b8;">Follows</th>
+                  <th style="text-align: right; padding: 0.5rem; color: #94a3b8;">AI Gen</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${daily.stats.slice(0, 30).map(d => `
+                  <tr style="border-bottom: 1px solid #1e293b;">
+                    <td style="padding: 0.5rem; color: #e2e8f0;">${d.date}</td>
+                    <td style="text-align: right; padding: 0.5rem; color: #e2e8f0;">${d.likes || 0}</td>
+                    <td style="text-align: right; padding: 0.5rem; color: #e2e8f0;">${d.replies || 0}</td>
+                    <td style="text-align: right; padding: 0.5rem; color: #e2e8f0;">${d.follows || 0}</td>
+                    <td style="text-align: right; padding: 0.5rem; color: #22c55e;">${d.ai_generated || 0}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          `;
+        } else {
+          chartDiv.innerHTML = '<div class="empty-state"><p>No daily stats yet</p></div>';
+        }
+
+        // Render sessions
+        const sessionsDiv = document.getElementById('sessionsList');
+        if (sessions.sessions && sessions.sessions.length > 0) {
+          sessionsDiv.innerHTML = sessions.sessions.slice(0, 10).map(s => `
+            <div class="history-item">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <span style="color: #f8fafc; font-weight: 500;">${s.platform || 'twitter'} - ${s.mode || 'engagement'}</span>
+                <span class="badge ${s.status === 'active' ? 'badge-active' : 'badge-inactive'}">${s.status}</span>
+              </div>
+              <div style="font-size: 0.875rem; color: #94a3b8; margin-bottom: 0.25rem;">
+                Likes: ${s.likes || 0} | Replies: ${s.replies || 0} | Follows: ${s.follows || 0}
+              </div>
+              <div style="font-size: 0.75rem; color: #64748b;">
+                Started: ${new Date(s.started_at).toLocaleString()}
+              </div>
+            </div>
+          `).join('');
+        } else {
+          sessionsDiv.innerHTML = '<div class="empty-state"><p>No sessions yet</p></div>';
+        }
+      } catch (err) {
+        console.error('Failed to load stats:', err);
+      }
+    }
+
+    // Update tab switching to load stats
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab + '-tab').classList.add('active');
+        currentTab = tab.dataset.tab;
+        
+        // Load tab data
+        if (currentTab === 'models') loadModels();
+        if (currentTab === 'prompts') loadPrompts();
+        if (currentTab === 'templates') loadTemplates();
+        if (currentTab === 'history') loadHistory();
+        if (currentTab === 'stats') loadStats();
+        if (currentTab === 'tokens') loadTokens();
+      });
+    });
+
+    // Initial load
+    loadModels();
+  </script>
+</body>
+</html>

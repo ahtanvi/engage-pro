@@ -1,0 +1,80 @@
+{
+  "manifest_version": 3,
+  "name": "engage-pro-twitter",
+  "description": "AI-powered Twitter/X engagement with smart replies and Telegram queue - v1.8.3",
+  "version": "1.8.3",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": [
+    "storage",
+    "alarms",
+    "sidePanel",
+    "tabs",
+    "scripting"
+  ],
+  "host_permissions": [
+    "*://*.x.com/*",
+    "*://*.twitter.com/*",
+    "*://web.telegram.org/*",
+    "*://*.telegram.org/*"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "assets/logo-light.png",
+        "assets/logo-dark.png"
+      ],
+      "matches": [
+        "*://*.x.com/*",
+        "*://*.twitter.com/*",
+        "*://web.telegram.org/*",
+        "*://*.telegram.org/*"
+      ]
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "engage-pro-twitter",
+    "default_popup": "popup/popup.html"
+  },
+  "side_panel": {
+    "default_path": "sidepanel/sidepanel.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.x.com/*",
+        "*://*.twitter.com/*"
+      ],
+      "exclude_matches": [
+        "*://*.x.com/login*",
+        "*://*.x.com/i/flow*",
+        "*://*.twitter.com/login*",
+        "*://*.twitter.com/i/flow*"
+      ],
+      "run_at": "document_idle",
+      "js": [
+        "content-scripts/twitter.js"
+      ],
+      "css": [
+        "content-scripts/twitter.css"
+      ]
+    },
+    {
+      "matches": [
+        "*://web.telegram.org/*",
+        "*://*.telegram.org/*"
+      ],
+      "run_at": "document_idle",
+      "js": [
+        "content-scripts/telegram.js"
+      ]
+    }
+  ]
+}
